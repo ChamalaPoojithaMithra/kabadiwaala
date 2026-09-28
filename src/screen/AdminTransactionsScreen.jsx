@@ -13,7 +13,7 @@ function AdminTransactionsScreen({ onBack }) {
 
   async function fetchTransactions() {
     try {
-      const res = await fetch("http://localhost:3001/api/transactions");
+      const res = await fetch("http://https://kabadiwala-1.onrender.com/api/transactions");
       if (res.ok) {
         const data = await res.json();
         if (data.transactions && data.transactions.length > 0) {

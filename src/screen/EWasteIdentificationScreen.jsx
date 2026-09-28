@@ -144,7 +144,7 @@ function EWasteIdentificationScreen({
 
     try {
       const response = await fetch(
-        "http://localhost:3001/identify-ewaste",
+        "http://https://kabadiwala-1.onrender.com/identify-ewaste",
         {
           method: "POST",
           headers: {

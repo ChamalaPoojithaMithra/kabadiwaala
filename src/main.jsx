@@ -844,7 +844,7 @@ if (screen === "recycler-login") {
         console.log("Recycler Login:", phone);
 
         try {
-          await fetch("http://localhost:3001/api/recyclers", {
+          await fetch("http://https://kabadiwala-1.onrender.com/api/recyclers", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1122,7 +1122,7 @@ if (screen === "collector-offer-received") {
           window.speechSynthesis.cancel();
 
           try {
-            await fetch("http://localhost:3001/api/collectors", {
+            await fetch("http://https://kabadiwala-1.onrender.com/api/collectors", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
@@ -1579,7 +1579,7 @@ if (screen === "ewaste-identification") {
         setLotData(createdLot);
 
         try {
-          await fetch("http://localhost:3001/api/e-waste-lots", {
+          await fetch("http://https://kabadiwala-1.onrender.com/api/e-waste-lots", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1804,7 +1804,7 @@ if (screen === "transaction-complete") {
           const amount = Number(transactionData.totalAmount) || 1260;
           const lotId = lotData?.lotId || "LOT-1001";
 
-          await fetch("http://localhost:3001/api/transactions", {
+          await fetch("http://https://kabadiwala-1.onrender.com/api/transactions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1821,7 +1821,7 @@ if (screen === "transaction-complete") {
             })
           });
 
-          await fetch("http://localhost:3001/api/payments", {
+          await fetch("http://https://kabadiwala-1.onrender.com/api/payments", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1835,7 +1835,7 @@ if (screen === "transaction-complete") {
             })
           });
 
-          await fetch("http://localhost:3001/api/traceability", {
+          await fetch("http://https://kabadiwala-1.onrender.com/api/traceability", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -1851,7 +1851,7 @@ if (screen === "transaction-complete") {
             })
           });
 
-          await fetch(`http://localhost:3001/api/e-waste-lots/${lotId}`, {
+          await fetch(`http://https://kabadiwala-1.onrender.com/api/e-waste-lots/${lotId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: "Sold" })

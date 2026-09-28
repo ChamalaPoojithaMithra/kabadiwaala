@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./DemoIVRScreen.css";
 
 // API Base URL (reusing existing Express server)
-const API_BASE = "http://localhost:3001";
+const API_BASE = "http://https://kabadiwala-1.onrender.com";
 
 // DTMF Frequencies for keypad beeps
 const DTMF_FREQS = {

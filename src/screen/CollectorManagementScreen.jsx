@@ -39,7 +39,7 @@ function CollectorManagementScreen({ onBack }) {
       setError("");
 
       const response = await fetch(
-        "http://localhost:3001/api/collectors"
+        "http://https://kabadiwala-1.onrender.com/api/collectors"
       );
 
       if (!response.ok) {
@@ -89,7 +89,7 @@ function CollectorManagementScreen({ onBack }) {
       }
 
       const response = await fetch(
-        "http://localhost:3001/api/collectors",
+        "http://https://kabadiwala-1.onrender.com/api/collectors",
         {
           method: "POST",
 

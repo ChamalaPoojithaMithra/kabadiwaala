@@ -13,7 +13,7 @@ function AdminPriceDemandScreen({ onBack }) {
 
   async function fetchPriceDemand() {
     try {
-      const res = await fetch("http://localhost:3001/api/price-demand");
+      const res = await fetch("http://https://kabadiwala-1.onrender.com/api/price-demand");
       if (res.ok) {
         const data = await res.json();
         if (data.priceDemand && data.priceDemand.length > 0) {
