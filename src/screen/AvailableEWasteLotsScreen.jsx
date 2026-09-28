@@ -193,7 +193,7 @@ function AvailableEWasteLotsScreen({
 
   async function fetchAvailableLots() {
     try {
-      const res = await fetch("http://https://kabadiwala-1.onrender.com/api/e-waste-lots");
+      const res = await fetch("https://://kabadiwala-1.onrender.com/api/e-waste-lots");
       if (res.ok) {
         const data = await res.json();
         if (data.lots && data.lots.length > 0) {

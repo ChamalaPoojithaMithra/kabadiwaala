@@ -14,7 +14,7 @@ function RecyclerVerificationScreen({ onBack }) {
   async function fetchRecyclers() {
     try {
       setLoading(true);
-      const res = await fetch("http://https://kabadiwala-1.onrender.com/api/recyclers");
+      const res = await fetch("https://://kabadiwala-1.onrender.com/api/recyclers");
       if (res.ok) {
         const data = await res.json();
         if (data.recyclers && data.recyclers.length > 0) {
@@ -62,7 +62,7 @@ function RecyclerVerificationScreen({ onBack }) {
     );
 
     try {
-      await fetch(`http://https://kabadiwala-1.onrender.com/api/recyclers/${id}`, {
+      await fetch(`https://://kabadiwala-1.onrender.com/api/recyclers/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ verificationStatus: newStatus })
