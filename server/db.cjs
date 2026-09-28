@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const connectDB = async () => {
@@ -13,8 +12,17 @@ const connectDB = async () => {
       !mongoURI.startsWith("mongodb://") &&
       !mongoURI.startsWith("mongodb+srv://")
     ) {
-      throw new Error("MONGO_URI must start with mongodb:// or mongodb+srv://");
+      throw new Error("Invalid MongoDB connection string format");
     }
+
+    const parsedURI = new URL(mongoURI);
+
+    console.log("MongoDB URI check:", {
+      protocol: parsedURI.protocol,
+      usernamePresent: Boolean(parsedURI.username),
+      passwordPresent: Boolean(parsedURI.password),
+      hostPresent: Boolean(parsedURI.hostname)
+    });
 
     await mongoose.connect(mongoURI);
 
