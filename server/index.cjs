@@ -40,23 +40,11 @@ const ai = new GoogleGenAI({
 // HOME / HEALTH CHECK
 // ======================================================
 
-app.get("/", (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
+    success: true,
     message: "E-Waste Connect server is running",
-    database: "ewaste_connect",
-    ivr: "enabled",
-    collections: [
-      "collectors",
-      "recyclers",
-      "e_waste_lots",
-      "transactions",
-      "payments",
-      "traceability",
-      "pickup_routes",
-      "price_demand",
-      "recycling_status",
-      "anomalies"
-    ]
+    status: "OK"
   });
 });
 
@@ -1666,11 +1654,21 @@ app.post("/api/ivr/help", (req, res) => {
 });
 
 // ======================================================
+// SERVE FRONTEND
+// ======================================================
+
+app.use(express.static(path.join(__dirname, "../dist")));
+
+app.get("/{*path}", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
+
+// ======================================================
 // START SERVER
 // ======================================================
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`E-Waste Connect server running on port ${PORT}`);
 });
