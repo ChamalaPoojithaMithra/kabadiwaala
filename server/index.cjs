@@ -19,12 +19,29 @@ const PriceDemand = require("./models/PriceDemand.cjs");
 const RecyclingStatus = require("./models/RecyclingStatus.cjs");
 const Anomaly = require("./models/Anomaly.cjs");
 const ivrService = require("./services/ivrService.cjs");
-
 connectDB();
 
 const app = express();
 
-app.use(cors());
+// ======================================================
+// CORS CONFIGURATION
+// ======================================================
+
+app.use(cors({
+  origin: [
+    "https://kabadiwaala-1.onrender.com",
+    "https://kabadiwala-1.onrender.com",
+    "http://localhost:5173"
+  ],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+  optionsSuccessStatus: 204
+}));
+// ======================================================
+// BODY PARSING
+// ======================================================
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
@@ -93,16 +110,28 @@ app.post("/api/collectors", async (req, res) => {
       collector: savedCollector
     });
   } catch (error) {
-    console.error("Error saving collector:", error.message);
+    console.error("Error saving collector:", error);
+
     if (error.code === 11000) {
-      const existing = await Collector.findOne({ collectorId: req.body.collectorId });
-      return res.status(200).json({
-        success: true,
-        message: "Collector ID already exists",
-        collector: existing
-      });
+      try {
+        const existing = await Collector.findOne({
+          $or: [
+            { collectorId: req.body.collectorId },
+            { phone: req.body.phone }
+          ]
+        });
+
+        return res.status(200).json({
+          success: true,
+          message: "Collector already registered",
+          collector: existing
+        });
+      } catch (lookupError) {
+        console.error("Error finding existing collector:", lookupError);
+      }
     }
-    res.status(500).json({
+
+    return res.status(500).json({
       success: false,
       message: "Failed to save collector",
       error: error.message
@@ -1452,22 +1481,21 @@ app.post("/identify-ewaste", async (req, res) => {
       "Other E-Waste"
     ];
 
-    let identifiedMaterial = "Other E-Waste";
+let identifiedMaterial = "Other E-Waste";
 
-    try {
-      // Strip data URI prefix if present
-      let cleanBase64 = image;
-      let effectiveMime = mimeType || "image/jpeg";
+// Strip data URI prefix if present
+let cleanBase64 = image;
+let effectiveMime = mimeType || "image/jpeg";
 
-      if (image.startsWith("data:")) {
-        const parts = image.split(",");
-        const header = parts[0];
-        cleanBase64 = parts[1] || "";
-        const mimeMatch = header.match(/data:([^;]+);base64/);
-        if (mimeMatch) {
-          effectiveMime = mimeMatch[1];
-        }
-      }
+if (image.startsWith("data:")) {
+  const parts = image.split(",");
+  const header = parts[0];
+  cleanBase64 = parts[1] || "";
+  const mimeMatch = header.match(/data:([^;]+);base64/);
+  if (mimeMatch) {
+    effectiveMime = mimeMatch[1];
+  }
+}
 
       const promptText =
         "Identify what category of electronic waste is shown in this photo. " +
@@ -1475,65 +1503,75 @@ app.post("/identify-ewaste", async (req, res) => {
         "Mobile Phone, Laptop, Computer Parts, TV / Monitor, Battery, Other E-Waste. " +
         "Return ONLY the exact category name and nothing else.";
 
-      const models = ["gemini-3.6-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-2.5-flash"];
-      let reply = null;
+const models = ["gemini-2.5-flash", "gemini-2.0-flash"];
 
-      for (const m of models) {
-        try {
-          const response = await ai.models.generateContent({
-            model: m,
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  { text: promptText },
-                  {
-                    inlineData: {
-                      mimeType: effectiveMime,
-                      data: cleanBase64
-                    }
-                  }
-                ]
+let reply = null;
+let geminiError = null;
+
+for (const m of models) {
+  try {
+    const response = await ai.models.generateContent({
+      model: m,
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: promptText },
+            {
+              inlineData: {
+                mimeType: effectiveMime,
+                data: cleanBase64
               }
-            ]
-          });
-          if (response && response.text) {
-            reply = response.text.trim();
-            break;
-          }
-        } catch (mErr) {
-          // try next model
+            }
+          ]
         }
-      }
+      ]
+    });
 
-      if (reply) {
-        console.log("Gemini identified response:", reply);
-        const match = categories.find((c) =>
-          reply.toLowerCase().includes(c.toLowerCase())
-        );
-        if (match) {
-          identifiedMaterial = match;
-        }
-      } else {
-        identifiedMaterial = "Battery";
-      }
-    } catch (geminiErr) {
-      console.warn("Gemini vision analysis note:", geminiErr.message);
-      identifiedMaterial = "Battery";
+    if (response && response.text) {
+      reply = response.text.trim();
+      console.log(`Gemini model ${m} response:`, reply);
+      break;
     }
-
-    res.json({
-      success: true,
-      material: identifiedMaterial
-    });
-  } catch (error) {
-    console.error("identify-ewaste route error:", error.message);
-    res.status(500).json({
-      success: false,
-      message: "Identification process encountered an error",
-      error: error.message
-    });
+  } catch (mErr) {
+    console.error(`Gemini model ${m} failed:`, mErr.message);
+    geminiError = mErr;
   }
+}
+
+if (reply) {
+  const match = categories.find((c) =>
+    reply.toLowerCase().includes(c.toLowerCase())
+  );
+
+  if (match) {
+    identifiedMaterial = match;
+  } else {
+    identifiedMaterial = "Other E-Waste";
+  }
+} else {
+  console.error("All Gemini models failed:", geminiError?.message);
+
+  return res.status(502).json({
+    success: false,
+    message: "Gemini image identification failed",
+    error: geminiError?.message || "No identification result received"
+  });
+}
+
+res.json({
+  success: true,
+  material: identifiedMaterial
+});
+
+} catch (error) {
+  console.error("identify-ewaste route error:", error.message);
+  res.status(500).json({
+    success: false,
+    message: "Identification process encountered an error",
+    error: error.message
+  });
+}
 });
 
 // ======================================================
