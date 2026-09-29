@@ -1498,7 +1498,7 @@ if (image.startsWith("data:")) {
         "Mobile Phone, Laptop, Computer Parts, TV / Monitor, Battery, Other E-Waste. " +
         "Return ONLY the exact category name and nothing else.";
 
-const models = ["gemini-2.5-flash", "gemini-2.0-flash"];
+const models = ["gemini-3.8-flash"];
 
 let reply = null;
 let geminiError = null;
