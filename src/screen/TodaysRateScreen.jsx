@@ -108,7 +108,7 @@ function TodaysRateScreen({ language, onBack }) {
   useEffect(() => {
     async function loadRates() {
       try {
-        const res = await fetch("https://kabadiwala-1.onrender.com/api/price-demand");
+        const res = await fetch("https://kabadiwaala-1.onrender.com/api/price-demand");
         if (res.ok) {
           const data = await res.json();
           if (data.priceDemand && data.priceDemand.length > 0) {

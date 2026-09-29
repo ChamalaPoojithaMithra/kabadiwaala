@@ -13,7 +13,7 @@ function AdminPaymentsScreen({ onBack }) {
 
   async function fetchPayments() {
     try {
-      const res = await fetch("https://kabadiwala-1.onrender.com/api/payments");
+      const res = await fetch("https://kabadiwaala-1.onrender.com/api/payments");
       if (res.ok) {
         const data = await res.json();
         if (data.payments && data.payments.length > 0) {

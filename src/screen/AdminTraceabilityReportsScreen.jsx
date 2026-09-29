@@ -12,7 +12,7 @@ function AdminTraceabilityReportsScreen({ onBack }) {
 
   async function fetchTraceability() {
     try {
-      const res = await fetch("https://kabadiwala-1.onrender.com/api/traceability");
+      const res = await fetch("https://kabadiwaala-1.onrender.com/api/traceability");
       if (res.ok) {
         const data = await res.json();
         if (data.records && data.records.length > 0) {

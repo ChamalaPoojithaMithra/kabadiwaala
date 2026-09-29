@@ -12,7 +12,7 @@ function AdminPickupRoutesScreen({ onBack }) {
 
   async function fetchRoutes() {
     try {
-      const res = await fetch("https://kabadiwala-1.onrender.com/api/pickup-routes");
+      const res = await fetch("https://kabadiwaala-1.onrender.com/api/pickup-routes");
       if (res.ok) {
         const data = await res.json();
         if (data.routes && data.routes.length > 0) {

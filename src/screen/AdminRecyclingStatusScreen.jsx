@@ -14,7 +14,7 @@ function AdminRecyclingStatusScreen({ onBack }) {
   async function fetchRecyclingStatus() {
     try {
       setLoading(true);
-      const res = await fetch("https://kabadiwala-1.onrender.com/api/recycling-status");
+      const res = await fetch("https://kabadiwaala-1.onrender.com/api/recycling-status");
       if (res.ok) {
         const data = await res.json();
         if (data.recyclingStatus && data.recyclingStatus.length > 0) {
