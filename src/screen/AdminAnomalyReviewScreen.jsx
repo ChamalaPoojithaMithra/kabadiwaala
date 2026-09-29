@@ -12,7 +12,7 @@ function AdminAnomalyReviewScreen({ onBack }) {
 
   async function fetchAnomalies() {
     try {
-      const res = await fetch("https://://kabadiwala-1.onrender.com/api/anomalies");
+      const res = await fetch("https://kabadiwala-1.onrender.com/api/anomalies");
       if (res.ok) {
         const data = await res.json();
         if (data.anomalies && data.anomalies.length > 0) {
@@ -74,7 +74,7 @@ function AdminAnomalyReviewScreen({ onBack }) {
         : "Open";
 
     try {
-      await fetch(`https://://kabadiwala-1.onrender.com/api/anomalies/${id}`, {
+      await fetch(`https://kabadiwala-1.onrender.com/api/anomalies/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: mappedBackendStatus })

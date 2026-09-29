@@ -117,7 +117,7 @@ function TransactionsScreen({ language, onBack }) {
 
   async function fetchTransactions() {
     try {
-      const res = await fetch("https://://kabadiwala-1.onrender.com/api/transactions");
+      const res = await fetch("https://kabadiwala-1.onrender.com/api/transactions");
       if (res.ok) {
         const data = await res.json();
         if (data.transactions && data.transactions.length > 0) {
