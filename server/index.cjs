@@ -28,15 +28,10 @@ const app = express();
 // ======================================================
 
 app.use(cors({
-  origin: [
-    "https://kabadiwaala-1.onrender.com",
-    "https://kabadiwala-1.onrender.com",
-    "http://localhost:5173"
-  ],
+  origin: "https://kabadiwaala-1.onrender.com",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-  optionsSuccessStatus: 204
+  credentials: true
 }));
 // ======================================================
 // BODY PARSING
